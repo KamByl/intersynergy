@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edytuj osobę{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="bg-light mt-4 p-4">
+                <h1>Edycja</h1>
+                {{ form(osobyForm) }}
+            </div>
+        </div>
+    </div>
+{% endblock %}
