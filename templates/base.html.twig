@@ -24,7 +24,7 @@
                         <a class="navbar-brand" href="{{ path('admin') }}">Admin</a>
                     {% endif %}
                     {% if is_granted('ROLE_USER') %}
-                        <a class="navbar-brand" href="#">Edytuj moje dane</a>
+                        <a class="navbar-brand" href="{{ path('app_osoby_edit') }}">Edytuj moje dane</a>
                         <a class="navbar-brand" href="{{ path('app_logout') }}">Wyloguj</a>
                     {% endif %}
                 </div>

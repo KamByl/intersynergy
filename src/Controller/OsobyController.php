@@ -15,60 +15,41 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class OsobyController extends AbstractController
 {
-    /**
-     * @Route("/osoby/{page<\d+>}", name="app_osoby")
-     * @IsGranted("IS_AUTHENTICATED_REMEMBERED")
-     */
-    public function list(OsobyRepository $repository, $page = 1): Response
-    {
-        $queryBuilder = $repository->findAllByNazwisko();
-
-        $pagerfanta = new PagerFanta(
-            new QueryAdapter($queryBuilder)
-        );
-
-        $pagerfanta->setMaxPerPage(20);
-        $pagerfanta->setCurrentPage($page);
-
-        return $this->render('admin/osoby.html.twig', [
-            'pager' => $pagerfanta
-            ]);
-    }
 
     /**
-     * @Route("/osoby/delete/{id}", name="app_osoby_delete")
+     * @Route("/account/edit", name="app_osoby_edit")
+     * @IsGranted("ROLE_USER")
      */
-    public function delete(Osoby $osoba, OsobyRepository $repository): Response
+    public function edit(Request $request, string $photoDir): Response
     {
-        $repository->remove($osoba, true);
-        $this->addFlash('success','Osoba została skasowana');
-
-        return $this->redirectToRoute('app_osoby');
-    }
-
-    /**
-     * @Route("/osoby/edit/{id}", name="app_osoby_edit")
-     */
-    public function edit(Osoby $osoba, Request $request): Response
-    {
-        $form = $this->createForm(OsobyEditFormType::class, $osoba);
+        $form = $this->createForm(OsobyEditFormType::class, $this->getUser());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $osoba = $form->getData();
 
-            $this->addFlash('success','Dane osoby zostały zmienione');
+            if ($cv = $form['cv']->getData()) {
+                $filename = bin2hex(random_bytes(6)) . '.' . $cv->guessExtension();
+                try {
+                    $cv->move($photoDir, $filename);
+                } catch (FileException $e) {
+                    // to do
+                }
+                $osoba->setCv($cv);
+            }
+
+            $this->addFlash('success', 'Dane osoby zostały zmienione');
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($osoba);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_osoby');
+            return $this->redirectToRoute('app_home');
         }
 
 
         return $this->render('admin/osoby_edit.html.twig', [
             'osobyForm' => $form->createView(),
-            ]);
+        ]);
     }
 }

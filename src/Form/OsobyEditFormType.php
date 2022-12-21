@@ -8,9 +8,11 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
 
 class OsobyEditFormType extends AbstractType
 {
@@ -35,12 +37,12 @@ class OsobyEditFormType extends AbstractType
             ->add('data_rejestracji', DateType::class, [
                 'widget' => 'single_text'
             ])
-            ->add('data_aktualizacji_wpisu')
-            ->add('ocena', ChoiceType::class, [
-                'choices'  => array_combine(range(1, 10), range(1,10))
+            ->add('ocena', TextType::class, [
+                'disabled'  => true
                 ])
             ->add('cv', FileType::class, [
                 'required' => false,
+                'data_class' => null,
             ])
             ->add('save', SubmitType::class, ['label' => 'Zapisz dane'])
         ;
