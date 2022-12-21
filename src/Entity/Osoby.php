@@ -5,29 +5,36 @@ namespace App\Entity;
 use Assert\File;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\OsobyRepository;
+use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=OsobyRepository::class)
+ * @ApiResource (paginationEnabled = false, order = {"nazwisko", "imie"}, collectionOperations = {"get" = {"normalization_context" = {"groups" = "osoby:list"}}}, itemOperations = {"get" = { "normalization_context" = {"groups" = "osoby:item"} }})
  */
+
 class Osoby implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"osoby:list"}, {"osoby:item"})
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=50)
+     * @Groups({"osoby:list"}, {"osoby:item"})
      */
     private $imie;
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Groups({"osoby:list"}, {"osoby:item"})
      */
     private $nazwisko;
 
@@ -38,16 +45,19 @@ class Osoby implements UserInterface, PasswordAuthenticatedUserInterface
      *      max = 11,
      *      exactMessage = "Pesel powinien mieć 11 znaków",
      *)
+     * @Groups({"osoby:item"})
      */
     private $pesel;
 
     /**
      * @ORM\Column(type="string", length=10, nullable=true)
+     * @Groups({"osoby:item"})
      */
     private $nip;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"osoby:item"})
      */
     private $adres;
 
@@ -56,6 +66,7 @@ class Osoby implements UserInterface, PasswordAuthenticatedUserInterface
      * @Assert\Email(
      *     message = "Podaj prawidłowy adres email"
      * )
+     * @Groups({"osoby:item"})
      */
     private $email;
 
@@ -79,41 +90,49 @@ class Osoby implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"osoby:item"})
      */
     private $opis;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"osoby:item"})
      */
     private $zainteresowania;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"osoby:item"})
      */
     private $umiejetnosci;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"osoby:item"})
      */
     private $doswiadczenie;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"osoby:item"})
      */
     private $data_urodzenia;
 
     /**
      * @ORM\Column(type="date")
+     * @Groups({"osoby:item"})
      */
     private $data_rejestracji;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Groups({"osoby:item"})
      */
     private $data_aktualizacji_wpisu;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Groups({"osoby:item"})
      */
     private $ocena;
 
@@ -124,6 +143,7 @@ class Osoby implements UserInterface, PasswordAuthenticatedUserInterface
      *     mimeTypes = {"application/pdf", "application/x-pdf"},
      *     mimeTypesMessage = "Please upload a valid PDF",
      * )
+     * @Groups({"osoby:item"})
      */
     private $cv;
 
