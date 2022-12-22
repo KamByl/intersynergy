@@ -123,7 +123,6 @@ class Osoby implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
-     * @Groups({"osoby:item"})
      */
     private $ocena;
 
