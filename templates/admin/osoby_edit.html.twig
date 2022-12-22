@@ -7,7 +7,30 @@
         <div class="row">
             <div class="bg-light mt-4 p-4">
                 <h1>Edycja</h1>
-                {{ form(osobyForm) }}
+                {{ form_start(osobyForm) }}
+                    {{ form_row(osobyForm.imie) }}
+                    {{ form_row(osobyForm.nazwisko) }}
+                    {{ form_row(osobyForm.pesel) }}
+                    {{ form_row(osobyForm.nip) }}
+                    {{ form_row(osobyForm.adres) }}
+                    {{ form_row(osobyForm.email) }}
+                    {{ form_row(osobyForm.plainPassword) }}
+                    {{ form_row(osobyForm.opis) }}
+                    {{ form_row(osobyForm.zainteresowania) }}
+                    {{ form_row(osobyForm.umiejetnosci ) }}
+                    {{ form_row(osobyForm.doswiadczenie) }}
+                    {{ form_row(osobyForm.data_urodzenia) }}
+                    {{ form_row(osobyForm.cv) }}
+                    {% if (osobyForm.vars.value.cv) %}
+                        <div class="mb-3"><b>{{ osobyForm.vars.value.cv }}</b></div>
+                    {% endif %}
+
+                    <div class="mb-3"><label for="osoby_edit_form_data_urodzenia" class="form-label required">Data rejestracji</label><div><b>{{ osobyForm.vars.value.dataRejestracji|format_datetime(locale='pl', pattern='dd MMMM y') }}</b></div></div>
+                    <div class="mb-3"><label for="osoby_edit_form_data_urodzenia" class="form-label required">Data aktualizacji danych</label><div><b>{{ osobyForm.vars.value.dataAktualizacjiWpisu|format_datetime(locale='pl', pattern='dd MMMM y HH:mm') }}</b></div></div>
+                    
+                    {{ form_row(osobyForm.save) }}
+                {{ form_end(osobyForm) }}
+
             </div>
         </div>
     </div>

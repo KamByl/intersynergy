@@ -6,6 +6,7 @@ use Assert\File;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\OsobyRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -14,8 +15,8 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 /**
  * @ORM\Entity(repositoryClass=OsobyRepository::class)
  * @ApiResource (paginationEnabled = false, order = {"nazwisko", "imie"}, collectionOperations = {"get" = {"normalization_context" = {"groups" = "osoby:list"}}}, itemOperations = {"get" = { "normalization_context" = {"groups" = "osoby:item"} }})
+ * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
-
 class Osoby implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
@@ -39,12 +40,7 @@ class Osoby implements UserInterface, PasswordAuthenticatedUserInterface
     private $nazwisko;
 
     /**
-     * @ORM\Column(type="string", length=11)
-     * @Assert\Length(
-     *      min = 11,
-     *      max = 11,
-     *      exactMessage = "Pesel powinien mieć 11 znaków",
-     *)
+     * @ORM\Column(type="string", length=11, nullable=true)
      * @Groups({"osoby:item"})
      */
     private $pesel;
@@ -84,11 +80,6 @@ class Osoby implements UserInterface, PasswordAuthenticatedUserInterface
     private $roles = [];
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $haslo;
-
-    /**
      * @ORM\Column(type="text", nullable=true)
      * @Groups({"osoby:item"})
      */
@@ -113,7 +104,7 @@ class Osoby implements UserInterface, PasswordAuthenticatedUserInterface
     private $doswiadczenie;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true)
      * @Groups({"osoby:item"})
      */
     private $data_urodzenia;
@@ -131,21 +122,22 @@ class Osoby implements UserInterface, PasswordAuthenticatedUserInterface
     private $data_aktualizacji_wpisu;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="smallint", nullable=true)
      * @Groups({"osoby:item"})
      */
     private $ocena;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Assert\File(
-     *     maxSize = "1024k",
-     *     mimeTypes = {"application/pdf", "application/x-pdf"},
-     *     mimeTypesMessage = "Please upload a valid PDF",
-     * )
      * @Groups({"osoby:item"})
      */
     private $cv;
+
+    public function setCreatedAtValue()
+    {
+        $this->data_rejestracji = new \DateTime();
+        $this->data_aktualizacji_wpisu = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -223,19 +215,6 @@ class Osoby implements UserInterface, PasswordAuthenticatedUserInterface
 
         return $this;
     }
-
-    public function getHaslo(): ?string
-    {
-        return $this->haslo;
-    }
-
-    public function setHaslo(string $haslo): self
-    {
-        $this->haslo = $haslo;
-
-        return $this;
-    }
-
     public function getOpis(): ?string
     {
         return $this->opis;

@@ -30,6 +30,8 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
  */
 final class OsobyFactory extends ModelFactory
 {
+    private $passwordHasher;
+
     public function __construct( UserPasswordHasherInterface $passwordHasher)
     {
         parent::__construct();
@@ -45,7 +47,6 @@ final class OsobyFactory extends ModelFactory
             'nazwisko' => self::faker()->lastName(),
             'pesel' => self::faker()->numerify("#########"),
             'email' => self::faker()->email(),
-            'haslo' => self::faker()->text(),
             'data_urodzenia' => self::faker()->dateTime(),
             'data_rejestracji' => self::faker()->dateTime(),
             'data_aktualizacji_wpisu' => self::faker()->dateTime(),

@@ -13,6 +13,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\DateTimeType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 
 class OsobyEditFormType extends AbstractType
 {
@@ -26,7 +27,9 @@ class OsobyEditFormType extends AbstractType
             ->add('nip')
             ->add('adres')
             ->add('email', EmailType::class)
-            ->add('haslo')
+            ->add('plainPassword', PasswordType::class, [
+                'required' => false
+            ])
             ->add('opis')
             ->add('zainteresowania')
             ->add('umiejetnosci')
@@ -34,12 +37,6 @@ class OsobyEditFormType extends AbstractType
             ->add('data_urodzenia', DateType::class, [
                 'widget' => 'single_text'
             ])
-            ->add('data_rejestracji', DateType::class, [
-                'widget' => 'single_text'
-            ])
-            ->add('ocena', TextType::class, [
-                'disabled'  => true
-                ])
             ->add('cv', FileType::class, [
                 'required' => false,
                 'data_class' => null,

@@ -23,19 +23,25 @@ class OsobyController extends AbstractController
     public function edit(Request $request, string $photoDir): Response
     {
         $form = $this->createForm(OsobyEditFormType::class, $this->getUser());
+        $cv_name = $this->getUser()->getCv();
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $osoba = $form->getData();
-
-            if ($cv = $form['cv']->getData()) {
+            if (!empty($osoba->getPlainPassword()))
+                $osoba->setPassword($osoba->getPlainPassword());
+            if (null !== $cv = $form['cv']->getData()) {
                 $filename = bin2hex(random_bytes(6)) . '.' . $cv->guessExtension();
                 try {
                     $cv->move($photoDir, $filename);
                 } catch (FileException $e) {
                     // to do
                 }
-                $osoba->setCv($cv);
+                $osoba->setCv($filename);
+            }
+            else
+            {
+                $osoba->setCv($cv_name);
             }
 
             $this->addFlash('success', 'Dane osoby zostały zmienione');
