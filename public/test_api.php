@@ -1,4 +1,7 @@
 <?php
+
+$api_adress = 'http://192.168.43.101/api/osobies';
+
 function CallAPI($method, $url, $data = false, $port = 80)
 {
     $curl = curl_init();
@@ -31,15 +34,17 @@ function CallAPI($method, $url, $data = false, $port = 80)
     return $result;
 }
 
-$data = json_decode(CallAPI('GET', 'http://192.168.43.101/api/osobies', false, 8000));
+
+
+$data = json_decode(CallAPI('GET', $api_adress, false, 8000));
 
 if (isset($_GET['id'])) {
-    $data = json_decode(CallAPI('GET', 'http://192.168.43.101/api/osobies/' . $_GET['id'], false, 8000));
+    $data = json_decode(CallAPI('GET', $api_adress.'/' . $_GET['id'], false, 8000));
     foreach ($data as $key => $value) {
         echo "<b>" . $key . "</b> - " . $value . "<br />";
     }
 } else {
-    $data = json_decode(CallAPI('GET', 'http://192.168.43.101/api/osobies', false, 8000));
+    $data = json_decode(CallAPI('GET', $api_adress, false, 8000));
     foreach ($data as $osoba) {
         echo '<a href="?id=' . $osoba->id . '">' . $osoba->nazwisko . ' ' . $osoba->imie . '</a><br />';
     }
